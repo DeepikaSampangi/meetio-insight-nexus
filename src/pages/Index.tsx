@@ -1,6 +1,7 @@
 import { PersonCard } from "@/components/PersonCard";
 import { MeetingCard } from "@/components/MeetingCard";
 import { CalendarCard } from "@/components/CalendarCard";
+import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   // Sample data
