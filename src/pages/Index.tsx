@@ -1,24 +1,20 @@
-import { PersonCard } from "@/components/PersonCard";
-import { MeetingCard } from "@/components/MeetingCard";
-import { CalendarCard } from "@/components/CalendarCard";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User, Linkedin, Twitter, Instagram, Volume2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { PeopleSection } from "@/components/PeopleSection";
+import { MeetingsSection } from "@/components/MeetingsSection";
+import { CalendarSection } from "@/components/CalendarSection";
 
 const Index = () => {
   const navigate = useNavigate();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedPerson, setSelectedPerson] = useState<any | null>(null);
   const [selectedMeeting, setSelectedMeeting] = useState<any | null>(null);
-
-  // Sample data with extended information
-  const people = [
+  const [people, setPeople] = useState([
     {
       name: "Sarah Chen",
       role: "Product Manager",
@@ -71,7 +67,33 @@ const Index = () => {
         instagram: "@mross.eng"
       }
     },
-  ];
+    {
+      name: "Emma Thompson",
+      role: "Marketing Director",
+      company: "GlobalReach Media",
+      location: "London, UK",
+      meetingsCount: 4,
+      imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e",
+      recentUpdate: "Launched new brand campaign",
+      connectionStrength: "Strong" as const,
+      employmentHistory: [
+        { role: "Marketing Manager at MediaCorp", duration: "2020-2022" },
+        { role: "Senior Marketing Specialist at BrandX", duration: "2018-2020" }
+      ],
+      education: [
+        { degree: "MA Marketing", school: "London Business School", year: "2018" },
+        { degree: "BA Communications", school: "University of Manchester", year: "2016" }
+      ],
+      achievements: ["Marketing Excellence Award 2023", "Best Campaign 2022"],
+      expertise: ["Digital Marketing", "Brand Strategy", "Content Marketing"],
+      commonInterests: ["Marketing Analytics", "Brand Development"],
+      social: {
+        linkedin: "emma-thompson",
+        twitter: "@emmathompson",
+        instagram: "@emma.marketing"
+      }
+    },
+  ]);
 
   const meetings = [
     {
@@ -95,15 +117,60 @@ const Index = () => {
         { name: "Strategy Deck.pptx", url: "#" }
       ]
     },
+    {
+      title: "Marketing Campaign Review",
+      date: "2024-04-16",
+      time: "2:00 PM",
+      location: "Virtual Meeting Room",
+      participantsCount: 4,
+      attendees: [
+        { name: "Emma Thompson", imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e" },
+        { name: "Sarah Chen", imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" },
+      ],
+      type: "upcoming" as const,
+      agenda: [
+        "Campaign Performance Review",
+        "Next Quarter Planning",
+        "Budget Allocation"
+      ],
+      documents: [
+        { name: "Campaign_Results.pdf", url: "#" },
+        { name: "Budget_Plan.xlsx", url: "#" }
+      ]
+    },
+    {
+      title: "Product Development Sync",
+      date: "2024-04-17",
+      time: "11:00 AM",
+      location: "Conference Room B",
+      participantsCount: 6,
+      attendees: [
+        { name: "Michael Ross", imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d" },
+        { name: "Sarah Chen", imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" },
+      ],
+      type: "upcoming" as const,
+      agenda: [
+        "Sprint Review",
+        "Feature Prioritization",
+        "Technical Challenges Discussion"
+      ],
+      documents: [
+        { name: "Sprint_Report.pdf", url: "#" },
+        { name: "Technical_Specs.docx", url: "#" }
+      ]
+    },
   ];
 
   const playAudioBrief = (person: any) => {
-    // Implement text-to-speech functionality here
     const text = `${person.name} is a ${person.role} at ${person.company}. 
                   They have expertise in ${person.expertise.join(', ')}. 
                   Notable achievements include ${person.achievements.join(', ')}.`;
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
+  };
+
+  const handleAddPerson = (newPerson: any) => {
+    setPeople([...people, newPerson]);
   };
 
   return (
@@ -132,83 +199,20 @@ const Index = () => {
         </div>
 
         <div className="grid gap-8">
-          {/* People Section */}
-          <section>
-            <div className="mb-6">
-              <Badge variant="outline" className="mb-2">People</Badge>
-              <h2 className="section-title">Key Contacts</h2>
-              <p className="section-subtitle">Recent updates from people in your network</p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {people.map((person, index) => (
-                <div key={index} onClick={() => setSelectedPerson(person)} className="cursor-pointer">
-                  <PersonCard {...person} />
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Meetings Section */}
-          <section>
-            <div className="mb-6">
-              <Badge variant="outline" className="mb-2">Upcoming Meetings</Badge>
-              <h2 className="section-title">Scheduled Meetings</h2>
-              <p className="section-subtitle">Your upcoming meetings and attendees</p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {meetings.map((meeting, index) => (
-                <div key={index} onClick={() => setSelectedMeeting(meeting)} className="cursor-pointer">
-                  <MeetingCard {...meeting} />
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Calendar Section */}
-          <section>
-            <div className="mb-6">
-              <Badge variant="outline" className="mb-2">My Calendar</Badge>
-              <h2 className="section-title">Monthly Overview</h2>
-              <p className="section-subtitle">Your schedule at a glance</p>
-            </div>
-            <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
-              <Card className="p-4">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  className="rounded-md border"
-                />
-                <div className="mt-4">
-                  <h3 className="font-semibold mb-2">Upcoming Events</h3>
-                  <div className="space-y-2">
-                    {meetings.map((meeting, index) => (
-                      <CalendarCard key={index} {...meeting} />
-                    ))}
-                  </div>
-                </div>
-              </Card>
-              <Card className="p-4">
-                <h3 className="font-semibold mb-4">Today's Schedule</h3>
-                <div className="space-y-4">
-                  {meetings.map((meeting, index) => (
-                    <div key={index} className="text-sm">
-                      <p className="font-medium">{meeting.time}</p>
-                      <p>{meeting.title}</p>
-                      <div className="flex -space-x-2 mt-2">
-                        {meeting.attendees.map((attendee, idx) => (
-                          <Avatar key={idx} className="border-2 border-background w-6 h-6">
-                            <AvatarImage src={attendee.imageUrl} />
-                            <AvatarFallback>{attendee.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </div>
-          </section>
+          <PeopleSection
+            people={people}
+            onPersonClick={setSelectedPerson}
+            onAddPerson={handleAddPerson}
+          />
+          <MeetingsSection
+            meetings={meetings}
+            onMeetingClick={setSelectedMeeting}
+          />
+          <CalendarSection
+            date={date}
+            onDateSelect={setDate}
+            meetings={meetings}
+          />
         </div>
       </div>
 
